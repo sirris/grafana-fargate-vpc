@@ -19,7 +19,7 @@ Before using these scripts, be sure to:
 - An IAM user with the privileges to deploy cloudformation stacks
 - (optional) aws cli installed and properly configured
 - a key pair to access the bastion
-- an tls/ssl certificate for the domain you want to use, managed by aws certificate manager.
+- (optional) an tls/ssl certificate for the domain you want to use, managed by aws certificate manager (be sure to have the ARN of the certificate at hand).
 
 
 ## Deploying the infrastructure
@@ -28,3 +28,7 @@ Deploying this entire infrastructure can be done either via the cli or via the a
 You'll deploy the scripts from 01_vpc.cfn.yml all the way to 04_fargate_grafana.cfn.yml
 
 It's ok to accept all the defaults, you'll have to specify the name of the VPC and DB stack here and there.
+
+Note: if you want to use plain http (ok for testing, definitely not ok for production), use port 80 as the ELB ingress port used by security groups. No need for a certificate. Use port 443 as ELB ingress port if you use https.
+
+If you use Route53 for your DNS, fill out the LoadBalancerDomainName when running the fargate-grafana stack.(note: I did not test with Route 53). If you use your own DNS provider, you can find the address of your load balancer as an output of the fargate-grafana stack. Put a CNAME record for your domain and point it to the address of your load balancer, and you should be fine.
